@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">CICDApp</string>
+    <string name="hint_number_a">Número A</string>
+    <string name="hint_number_b">Número B</string>
+    <string name="btn_add">+</string>
+    <string name="btn_subtract">−</string>
+    <string name="btn_multiply">×</string>
+    <string name="btn_divide">÷</string>
+    <string name="result_placeholder">Resultado</string>
+    <string name="result_format">Resultado: %1$.2f</string>
+    <string name="error_division">Error: División por cero</string>
+</resources>

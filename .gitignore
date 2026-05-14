@@ -1,0 +1,22 @@
+# Archivos de firma - NUNCA deben subirse al repositorio
+*.jks
+*.keystore
+
+# Archivos generados por Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Archivos de IDE
+.idea/
+*.iml
+local.properties
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
+
+# Directorio de salida
+/captures
+.externalNativeBuild
+.cxx
