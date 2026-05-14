@@ -88,7 +88,9 @@ tasks.register<JacocoReport>("jacocoTestReport") {
     val fileFilter = listOf(
         "**/R.class", "**/R$*.class",
         "**/BuildConfig.*", "**/Manifest*.*",
-        "**/*Test*.*", "**/*\$*.*"
+        "**/*Test*.*", "**/*\$*.*",
+        // Excluir Activities ya que requieren pruebas instrumentadas, no unitarias
+        "**/*Activity*.*"
     )
 
     val debugTree = fileTree("${layout.buildDirectory.get().asFile}/tmp/kotlin-classes/debug") {
@@ -108,28 +110,41 @@ tasks.register<JacocoReport>("jacocoTestReport") {
 tasks.register("jacocoCoverageVerification") {
     dependsOn("jacocoTestReport")
     doLast {
-        val reportFile = file("${layout.buildDirectory.get().asFile}/reports/jacoco/jacocoTestReport/jacocoTestReport.xml")
-        if (reportFile.exists()) {
-            val text = reportFile.readText()
-            // Parsear contadores de línea del reporte XML de JaCoCo
-            val lineRegex = Regex("""<counter type="LINE" missed="(\d+)" covered="(\d+)"/>""")
-            val matches = lineRegex.findAll(text).toList()
-            if (matches.isNotEmpty()) {
-                val lastMatch = matches.last()
-                val missed = lastMatch.groupValues[1].toDouble()
-                val covered = lastMatch.groupValues[2].toDouble()
-                val total = missed + covered
-                val coverage = if (total > 0) (covered / total) * 100 else 0.0
-                println("Cobertura de líneas: %.2f%%".format(coverage))
-                // Umbral mínimo de cobertura: 60%
-                if (coverage < 60.0) {
-                    throw GradleException(
-                        "Quality Gate FALLIDO: cobertura de líneas %.2f%% está por debajo del umbral del 60%%".format(coverage)
-                    )
-                }
-                println("Quality Gate APROBADO: cobertura >= 60%")
-            }
+        // Buscar el reporte XML generado por JaCoCo
+        val buildDir = layout.buildDirectory.get().asFile
+        val reportFile = file("$buildDir/reports/jacoco/jacocoTestReport/jacocoTestReport.xml")
+        if (!reportFile.exists()) {
+            println("ADVERTENCIA: No se encontró reporte de JaCoCo en: ${reportFile.absolutePath}")
+            println("Quality Gate omitido por ausencia de reporte.")
+            return@doLast
         }
+        val text = reportFile.readText()
+        // Parsear TODOS los contadores de línea del reporte XML de JaCoCo y sumar totales
+        val lineRegex = Regex("""<counter type="LINE" missed="(\d+)" covered="(\d+)"/>""")
+        val matches = lineRegex.findAll(text).toList()
+        if (matches.isEmpty()) {
+            println("ADVERTENCIA: No se encontraron contadores de línea en el reporte.")
+            return@doLast
+        }
+        // Sumar todos los contadores LINE para obtener cobertura global
+        var totalMissed = 0.0
+        var totalCovered = 0.0
+        for (match in matches) {
+            totalMissed += match.groupValues[1].toDouble()
+            totalCovered += match.groupValues[2].toDouble()
+        }
+        val total = totalMissed + totalCovered
+        val coverage = if (total > 0) (totalCovered / total) * 100 else 0.0
+        println("=== Quality Gate de Cobertura ===")
+        println("Líneas cubiertas: %.0f / %.0f".format(totalCovered, total))
+        println("Cobertura de líneas: %.2f%%".format(coverage))
+        // Umbral mínimo de cobertura: 60%
+        if (coverage < 60.0) {
+            throw GradleException(
+                "Quality Gate FALLIDO: cobertura de líneas %.2f%% está por debajo del umbral del 60%%".format(coverage)
+            )
+        }
+        println("Quality Gate APROBADO: cobertura >= 60%")
     }
 }
 
