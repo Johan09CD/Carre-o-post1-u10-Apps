@@ -1,7 +1,5 @@
 # CICDApp — Pipeline CI/CD Android con GitHub Actions
 
-[![Android CI/CD](https://github.com/Johan09CD/Carre-o-post1-u10-Apps/actions/workflows/android-ci.yml/badge.svg)](https://github.com/Johan09CD/Carre-o-post1-u10-Apps/actions/workflows/android-ci.yml)
-
 > **Unidad 10: CI/CD, Publicación y Operación — Post-Contenido 1**
 > Ingeniería de Sistemas · 2026
 
