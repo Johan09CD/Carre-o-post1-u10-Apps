@@ -172,6 +172,10 @@ La salida debe mostrar **"Verified using v1 scheme"** o **"v2 scheme"**.
 - [x] El job `lint-and-test` completa exitosamente en GitHub Actions
 - [x] Los artefactos de reportes de pruebas son accesibles en el run del workflow
 
+**Evidencia — Job Lint y Pruebas Unitarias exitoso:**
+
+![Checkpoint 1 — Lint y Pruebas Unitarias](screenshots/checkpoint1-lint-tests-pass.png)
+
 ### Checkpoint 2: Build Firmado y Distribuido
 
 - [x] El job `build-and-distribute` se ejecuta solo en pushes a main (no en PRs)
@@ -179,12 +183,20 @@ La salida debe mostrar **"Verified using v1 scheme"** o **"v2 scheme"**.
 - [x] La distribución a Firebase App Distribution fue exitosa
 - [x] El tester configurado recibió la notificación de nuevo build disponible
 
+**Evidencia — Job Build y Distribución (requiere secrets configurados):**
+
+![Checkpoint 2 — Build y Distribución](screenshots/checkpoint2-build-distribute.png)
+
 ### Checkpoint 3: Quality Gate Configurado
 
 - [x] JaCoCo está configurado en `build.gradle.kts` y genera reportes HTML
 - [x] El workflow sube el reporte de cobertura como artefacto
 - [x] El pipeline falla si la cobertura de líneas está por debajo del 60%
 - [x] El README documenta el badge de estado del pipeline
+
+**Evidencia — Resumen del Workflow con artefactos:**
+
+![Checkpoint 3 — Workflow Summary](screenshots/checkpoint3-workflow-summary.png)
 
 ---
 
